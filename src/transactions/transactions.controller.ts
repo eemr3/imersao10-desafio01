@@ -1,10 +1,13 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   NotFoundException,
   Param,
+  ParseIntPipe,
   Post,
+  Put,
 } from '@nestjs/common';
 import { TransactionsDto } from './dto/transaction.dto';
 
@@ -24,9 +27,30 @@ export class TransactionsController {
   }
 
   @Get(':id')
-  async findById(@Param('id') id: string) {
+  async findById(@Param('id', ParseIntPipe) id: number) {
     try {
-      return this.transactionsService.findById(+id);
+      return await this.transactionsService.findById(id);
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
+  }
+
+  @Put(':id/update')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() data: TransactionsDto,
+  ) {
+    try {
+      return await this.transactionsService.updata(id, data);
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
+  }
+
+  @Delete(':id/delete')
+  async delete(@Param('id', ParseIntPipe) id: number) {
+    try {
+      return await this.transactionsService.delete(id);
     } catch (error) {
       throw new NotFoundException(error.message);
     }

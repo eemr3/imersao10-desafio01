@@ -28,16 +28,16 @@ export class TransactionsService {
   }
 
   async updata(id: number, data: TransactionsDto): Promise<UpdateResult> {
-    const transaction = await this.repository.findOne({ where: { id } });
-    if (!transaction) {
+    const transactionExists = await this.repository.findOne({ where: { id } });
+    if (!transactionExists) {
       throw new Error('Transaction not found!');
     }
     return await this.repository.update(id, data);
   }
 
   async delete(id: number): Promise<DeleteResult> {
-    const transaction = await this.repository.findOne({ where: { id } });
-    if (!transaction) {
+    const transactionExists = await this.repository.findOne({ where: { id } });
+    if (!transactionExists) {
       throw new Error('Transaction not found!');
     }
     return this.repository.delete(id);

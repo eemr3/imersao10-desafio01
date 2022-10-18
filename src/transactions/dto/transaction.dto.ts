@@ -1,4 +1,4 @@
-import { IsDecimal, IsNotEmpty, IsString } from 'class-validator';
+import { IsInt, IsNotEmpty, IsString } from 'class-validator';
 
 export class TransactionsDto {
   id?: number;
@@ -7,7 +7,7 @@ export class TransactionsDto {
   @IsNotEmpty()
   type: string;
 
-  @IsDecimal()
+  @IsInt()
   @IsNotEmpty()
-  amount: string;
+  amount: number;
 }
