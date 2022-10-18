@@ -1,56 +1,32 @@
 import {
+  Body,
   Controller,
   Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
   NotFoundException,
+  Param,
+  Post,
 } from '@nestjs/common';
+import { TransactionsDto } from './dto/transaction.dto';
+
 import { TransactionsService } from './transactions.service';
-import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { UpdateTransactionDto } from './dto/update-transaction.dto';
 
 @Controller('transactions')
 export class TransactionsController {
-  constructor(private readonly transactionsService: TransactionsService) {}
-
+  constructor(private transactionsService: TransactionsService) {}
   @Post()
-  create(@Body() createTransactionDto: CreateTransactionDto) {
-    return this.transactionsService.create(createTransactionDto);
+  async create(@Body() data: TransactionsDto) {
+    return this.transactionsService.create(data);
   }
 
   @Get()
-  findAll() {
-    return this.transactionsService.findAll();
+  async findAll() {
+    return await this.transactionsService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findById(@Param('id') id: string) {
     try {
-      return this.transactionsService.findOne(+id);
-    } catch (error) {
-      throw new NotFoundException(error.message);
-    }
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateTransactionDto: UpdateTransactionDto,
-  ) {
-    try {
-      return this.transactionsService.update(+id, updateTransactionDto);
-    } catch (error) {
-      throw new NotFoundException(error.message);
-    }
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    try {
-      return this.transactionsService.remove(+id);
+      return this.transactionsService.findById(+id);
     } catch (error) {
       throw new NotFoundException(error.message);
     }

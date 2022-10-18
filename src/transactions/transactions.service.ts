@@ -1,53 +1,45 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { UpdateTransactionDto } from './dto/update-transaction.dto';
-import { Transaction } from './entities/transaction.entity';
+import { Transactions } from './transactions.entity';
+import { UpdateResult, DeleteResult } from 'typeorm';
+import { TransactionsDto } from './dto/transaction.dto';
 
 @Injectable()
 export class TransactionsService {
   constructor(
-    @InjectRepository(Transaction)
-    private transationRepository: Repository<Transaction>,
+    @InjectRepository(Transactions)
+    private repository: Repository<TransactionsDto>,
   ) {}
 
-  async create(createTransactionDto: CreateTransactionDto) {
-    return this.transationRepository.create(createTransactionDto);
+  async create(data: TransactionsDto) {
+    return await this.repository.save(data);
   }
 
   async findAll() {
-    return await this.transationRepository.find();
+    return await this.repository.find();
   }
-
-  async findOne(id: number) {
-    const transaction = await this.transationRepository.findOne({
-      where: { id },
-    });
+  async findById(id: number) {
+    const transaction = await this.repository.findOne({ where: { id } });
     if (!transaction) {
-      throw new Error('Transaction not found');
+      throw new Error('Transaction not found!');
     }
     return transaction;
   }
 
-  async update(id: number, updateTransactionDto: UpdateTransactionDto) {
-    const transaction = await this.transationRepository.findOne({
-      where: { id },
-    });
+  async updata(id: number, data: TransactionsDto): Promise<UpdateResult> {
+    const transaction = await this.repository.findOne({ where: { id } });
     if (!transaction) {
-      throw new Error('Transaction not found');
+      throw new Error('Transaction not found!');
     }
-
-    return await this.transationRepository.update(id, updateTransactionDto);
+    return await this.repository.update(id, data);
   }
 
-  async remove(id: number) {
-    const transaction = await this.transationRepository.findOne({
-      where: { id },
-    });
+  async delete(id: number): Promise<DeleteResult> {
+    const transaction = await this.repository.findOne({ where: { id } });
     if (!transaction) {
-      throw new Error('Transaction not found');
+      throw new Error('Transaction not found!');
     }
-    return this.transationRepository.delete(id);
+    return this.repository.delete(id);
   }
 }

@@ -9,7 +9,7 @@ import { TransactionsModule } from './transactions/transactions.module';
     TransactionsModule,
     TypeOrmModule.forRoot({
       type: 'sqlite',
-      database: 'transaction_db',
+      database: 'db',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
